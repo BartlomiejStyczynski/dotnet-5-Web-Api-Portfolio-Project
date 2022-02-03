@@ -11,7 +11,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Services.UserServices
     {
         Task<ServiceResponse<List<GetUserDto>>> GetAllUsers();
         Task<ServiceResponse<GetUserDto>> GetSingleUserById(int id);
-        Task<ServiceResponse<List<GetUserDto>>> CreateUser(CreateUserDto newUser);
+        Task<ServiceResponse<GetUserDto>> CreateUser(CreateUserDto newUser);
 
         Task<ServiceResponse<GetUserDto>> UpdateUser(UpdateUserDto updatedDto);
 

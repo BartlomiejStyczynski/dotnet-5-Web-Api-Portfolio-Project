@@ -14,7 +14,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Models
         public DateTime? DateOfBirth { get; set; }
         public DateTime DateCreated { get; set; }
         public UserRole Role { get; set; }
-        public bool IsSubcribed { get; set; }
-        public bool IsGolden { get; set; }
+        public bool IsSubcribed { get; set; } = false;
+        public bool IsGolden { get; set; } = false;
     }
 }

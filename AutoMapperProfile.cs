@@ -13,6 +13,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project
         public AutoMapperProfile()
         {
              CreateMap<User, GetUserDto>();
+             CreateMap<GetUserDto, User>();
              CreateMap<CreateUserDto, User>();
         }
        

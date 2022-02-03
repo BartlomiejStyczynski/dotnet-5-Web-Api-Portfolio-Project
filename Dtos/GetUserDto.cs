@@ -7,8 +7,7 @@ using dotnet_5_Web_Api_Portfolio_Project.Models;
 namespace dotnet_5_Web_Api_Portfolio_Project.Dtos
 {
     public class GetUserDto
-    {
-                public int Id { get; set; }
+    {        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Nickname { get; set; }

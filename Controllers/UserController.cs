@@ -33,14 +33,14 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Controllers
             return Ok(await _userService.GetSingleUserById(Id));
         }
 
-        [HttpPost]
+        [HttpPost("CreateUser")]
 
         public async Task<ActionResult<ServiceResponse<User>>> CreateUser(CreateUserDto user)
         {
             return Ok(await _userService.CreateUser(user));
         }
 
-        [HttpPut]
+        [HttpPut("UpdateUser")]
         public async Task<ActionResult<ServiceResponse<GetUserDto>>> UpdateUser(UpdateUserDto updatedUser)
         {
             return Ok(await _userService.UpdateUser(updatedUser));
