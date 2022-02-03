@@ -3,41 +3,23 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dotnet_5_Web_Api_Portfolio_Project.Data;
 
 namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220203205435_UserCartRelation")]
+    partial class UserCartRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.2");
-
-            modelBuilder.Entity("dotnet_5_Web_Api_Portfolio_Project.Models.Cart", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Carts");
-                });
 
             modelBuilder.Entity("dotnet_5_Web_Api_Portfolio_Project.Models.Item", b =>
                 {
@@ -49,9 +31,6 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                     b.Property<byte>("Amount")
                         .HasColumnType("tinyint");
 
-                    b.Property<int?>("CartId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -62,8 +41,6 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                         .HasColumnType("tinyint");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CartId");
 
                     b.ToTable("Items");
                 });
@@ -108,27 +85,6 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("dotnet_5_Web_Api_Portfolio_Project.Models.Cart", b =>
-                {
-                    b.HasOne("dotnet_5_Web_Api_Portfolio_Project.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("dotnet_5_Web_Api_Portfolio_Project.Models.Item", b =>
-                {
-                    b.HasOne("dotnet_5_Web_Api_Portfolio_Project.Models.Cart", null)
-                        .WithMany("ItemList")
-                        .HasForeignKey("CartId");
-                });
-
-            modelBuilder.Entity("dotnet_5_Web_Api_Portfolio_Project.Models.Cart", b =>
-                {
-                    b.Navigation("ItemList");
                 });
 #pragma warning restore 612, 618
         }

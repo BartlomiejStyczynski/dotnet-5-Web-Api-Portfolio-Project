@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using dotnet_5_Web_Api_Portfolio_Project.Data;
+using dotnet_5_Web_Api_Portfolio_Project.Services.CartServices;
 using dotnet_5_Web_Api_Portfolio_Project.Services.UserServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,6 +38,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project
             });
             services.AddAutoMapper(typeof(Startup));
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICartService, CartService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
