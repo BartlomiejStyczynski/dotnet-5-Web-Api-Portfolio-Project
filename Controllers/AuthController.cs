@@ -47,7 +47,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Controllers
             {
                 return BadRequest();
             }               
-            return Ok();
+            return Ok(serviceResponse);
         }
     }
 }
