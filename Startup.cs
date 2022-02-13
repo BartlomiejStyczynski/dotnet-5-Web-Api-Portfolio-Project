@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using dotnet_5_Web_Api_Portfolio_Project.Data;
 using dotnet_5_Web_Api_Portfolio_Project.Services.CartServices;
-using dotnet_5_Web_Api_Portfolio_Project.Services.UserServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -37,8 +36,8 @@ namespace dotnet_5_Web_Api_Portfolio_Project
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "dotnet_5_Web_Api_Portfolio_Project", Version = "v1" });
             });
             services.AddAutoMapper(typeof(Startup));
-            services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICartService, CartService>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

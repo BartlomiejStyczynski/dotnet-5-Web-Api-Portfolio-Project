@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using dotnet_5_Web_Api_Portfolio_Project.Dtos;
+using dotnet_5_Web_Api_Portfolio_Project.Dtos.UserDtos;
 using dotnet_5_Web_Api_Portfolio_Project.Models;
 
 namespace dotnet_5_Web_Api_Portfolio_Project
@@ -14,7 +15,8 @@ namespace dotnet_5_Web_Api_Portfolio_Project
         {
              CreateMap<User, GetUserDto>();
              CreateMap<GetUserDto, User>();
-             CreateMap<CreateUserDto, User>();
+             CreateMap<UserRegisterDto, User>();
+             CreateMap<UserLoginDto, User>();
         }
        
     }

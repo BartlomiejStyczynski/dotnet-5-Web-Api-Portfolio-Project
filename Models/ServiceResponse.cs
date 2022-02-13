@@ -9,7 +9,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Models
     {
         public T Data { get; set; }
         public bool Success { get; set; } = true;
-        public string Massage { get; set; } = null;
+        public string Message { get; set; } = null;
         
     }
 }
