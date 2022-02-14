@@ -1,13 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using dotnet_5_Web_Api_Portfolio_Project.Data;
 using dotnet_5_Web_Api_Portfolio_Project.Services.CartServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -34,6 +37,9 @@ namespace dotnet_5_Web_Api_Portfolio_Project
         {
            services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
+            services.Configure<IdentityOptions>(options => 
+                options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier);
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "dotnet_5_Web_Api_Portfolio_Project", Version = "v1" });
@@ -60,6 +66,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project
                             ValidateAudience = false
                         };
                     });
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

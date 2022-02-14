@@ -31,7 +31,8 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Controllers
 
             if(!serviceResponse.Success)
             {
-                return BadRequest();
+
+                return BadRequest(serviceResponse.Message);
             }
 
             return Ok(serviceResponse);
@@ -45,7 +46,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Controllers
 
             if(!serviceResponse.Success)
             {
-                return BadRequest();
+                return BadRequest(serviceResponse);
             }               
             return Ok(serviceResponse);
         }

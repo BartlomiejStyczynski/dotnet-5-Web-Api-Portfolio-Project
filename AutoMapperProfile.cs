@@ -17,7 +17,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project
              CreateMap<GetUserDto, User>();
              CreateMap<UserRegisterDto, User>();
              CreateMap<UserLoginDto, User>();
+             CreateMap<User, UserRegisterDto>();
         }
-       
     }
 }
