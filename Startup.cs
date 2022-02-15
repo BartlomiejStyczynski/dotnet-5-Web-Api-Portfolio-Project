@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Data;
 using dotnet_5_Web_Api_Portfolio_Project.Data;
 using dotnet_5_Web_Api_Portfolio_Project.Services.CartServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -67,6 +68,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project
                         };
                     });
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddHttpContextAccessor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

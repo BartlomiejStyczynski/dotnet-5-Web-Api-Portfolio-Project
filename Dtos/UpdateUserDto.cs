@@ -11,7 +11,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Dtos
                 public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Nickname { get; set; }
+        public string Username { get; set; }
         public UserRole Role { get; set; }
         public bool IsSubcribed { get; set; }
         public bool IsGolden { get; set; }

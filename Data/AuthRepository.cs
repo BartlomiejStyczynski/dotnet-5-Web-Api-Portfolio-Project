@@ -1,16 +1,16 @@
-using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using dotnet_5_Web_Api_Portfolio_Project.Data;
 using dotnet_5_Web_Api_Portfolio_Project.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace dotnet_5_Web_Api_Portfolio_Project.Data
+namespace Data
 {
+
     public class AuthRepository : IAuthRepository
     {
         private readonly DataContext _context;
@@ -19,34 +19,39 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Data
         {
             _configuration = configuration;
             _context = context;
-            
+
         }
+
         public async Task<ServiceResponse<string>> Login(string username, string password)
         {
-            var serviceResponse = new ServiceResponse<string>();
-            var userInDb = await _context.Users.FirstOrDefaultAsync(u => u.Username.ToLower().Equals(username.ToLower()));
-            if(userInDb == null || !VerifyPasswordHash(password, userInDb.PasswordHash, userInDb.PasswordSalt))
+            var response = new ServiceResponse<string>();
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Username.ToLower().Equals(username.ToLower()));
+            if (user == null)
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = "User not found or invalid password.";
+                response.Success = false;
+                response.Message = "User not found.";
             }
-
+            else if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            {
+                response.Success = false;
+                response.Message = "Wrong password.";
+            }
             else
             {
-                serviceResponse.Data = CreateToken(userInDb);
+                response.Data = CreateToken(user);
             }
-            
-            return serviceResponse;
+
+            return response;
         }
 
         public async Task<ServiceResponse<int>> Register(User user, string password)
         {
-            var serviceResponse = new ServiceResponse<int>();
-            if(await UserExists(user.Username))
+            ServiceResponse<int> response = new ServiceResponse<int>();
+            if (await UserExists(user.Username))
             {
-                serviceResponse.Success = false;
-                serviceResponse.Message = $"Username {user.Username} already in use.";
-                return serviceResponse;
+                response.Success = false;
+                response.Message = "User already exists.";
+                return response;
             }
 
             CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
@@ -54,33 +59,24 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Data
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
-
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-
-            var userCart = new Cart();
-            userCart.User = user;
-            _context.Carts.Add(userCart);
-            await _context.SaveChangesAsync();
-            
-            serviceResponse.Data = user.Id;
-            
-            return serviceResponse;
+            response.Data = user.Id;
+            return response;
         }
 
         public async Task<bool> UserExists(string username)
         {
-            if(await _context.Users.AnyAsync(u => u.Username.ToLower().Equals(username.ToLower())))
+            if (await _context.Users.AnyAsync(x => x.Username.ToLower().Equals(username.ToLower())))
             {
                 return true;
             }
-
             return false;
         }
 
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
-            using(var hmac = new System.Security.Cryptography.HMACSHA512())
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
             {
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
@@ -89,12 +85,12 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Data
 
         private bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
-            using(var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
+            using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
             {
                 var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
                 for (int i = 0; i < computedHash.Length; i++)
                 {
-                    if(computedHash[i] != passwordHash[i])
+                    if (computedHash[i] != passwordHash[i])
                     {
                         return false;
                     }
@@ -109,13 +105,14 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Data
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username)
+
             };
 
             var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-            var tokenDescriptor = new SecurityTokenDescriptor
+            var tokendDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
                 Expires = System.DateTime.Now.AddDays(1),
@@ -123,8 +120,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Data
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
+            var token = tokenHandler.CreateToken(tokendDescriptor);
 
             return tokenHandler.WriteToken(token);
         }

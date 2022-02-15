@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using dotnet_5_Web_Api_Portfolio_Project.Dtos;
+using dotnet_5_Web_Api_Portfolio_Project.Dtos.CartDtos;
 using dotnet_5_Web_Api_Portfolio_Project.Dtos.UserDtos;
 using dotnet_5_Web_Api_Portfolio_Project.Models;
 
@@ -18,6 +19,14 @@ namespace dotnet_5_Web_Api_Portfolio_Project
              CreateMap<UserRegisterDto, User>();
              CreateMap<UserLoginDto, User>();
              CreateMap<User, UserRegisterDto>();
+             CreateMap<User, UserCartDto>();
+             CreateMap<User, UserCartDto>();
+
+             //cart maps
+
+             CreateMap<CreateNewCartDto, Cart>();
+             CreateMap<Cart, NewlyCreatedCartDto>();
+             
         }
     }
 }
