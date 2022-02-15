@@ -63,9 +63,14 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Services.CartServices
             
             try
             {
-                var cart = _mapper.Map<Cart>(newCart);
-                cart.User = await _context.Users.FirstOrDefaultAsync(u => u.Id == GetUserId());
-                cart.IsMainCart = false;
+                var cart = new Cart 
+                {
+                    ItemList = new List<Item>(),
+                    CartName = newCart.CartName,
+                    IsMainCart = false,
+                    User = await _context.Users.FirstOrDefaultAsync(u => u.Id == GetUserId())
+                };
+                
 
                 _context.Carts.Add(cart);
                 await _context.SaveChangesAsync();
