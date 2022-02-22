@@ -14,6 +14,6 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Dtos.CartDtos
         public List<GetItemDto> ItemList { get; set; }
         public UserCartDto User { get; set; }
 
-        public string CartName { get; set; }
+        public string Name { get; set; }
     }
 }

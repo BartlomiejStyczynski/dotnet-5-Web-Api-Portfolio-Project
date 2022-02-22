@@ -11,7 +11,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Models
         public List<Item> ItemList { get; set; } = new List<Item>();
         public User User { get; set; }
 
-        public string CartName { get; set; } = "Main";
+        public string Name { get; set; } = "Main";
 
         public bool IsMainCart { get; set; } = true;
     }

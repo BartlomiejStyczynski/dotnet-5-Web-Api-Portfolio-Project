@@ -10,10 +10,14 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Services.CartServices
 {
     public interface ICartService
     {
-        Task<ServiceResponse<List<GetItemDto>>> GetAllItems();
-        Task<ServiceResponse<List<GetItemDto>>> DeleteItemFromCart(int itemId, byte quantity);
-        Task<ServiceResponse<List<GetItemDto>>> AddItemToCart(int itemId, byte quantity);
+        Task<ServiceResponse<List<GetItemDto>>> GetAllItems(int id);
+        Task<ServiceResponse<List<GetItemDto>>> DeleteItemFromCart(int itemId, long quantity);
+        Task<ServiceResponse<List<GetItemDto>>> AddItemToCart(int itemId, long quantity);
 
         Task<ServiceResponse<NewlyCreatedCartDto>> CreateNewCart(CreateNewCartDto newCart);
+
+        Task<ServiceResponse<List<GetCartDetailsDto>>> DeleteCart(int id);
+        Task<ServiceResponse<GetCartDetailsDto>> GetCartDetails(int id);
+        Task<ServiceResponse<List<GetCartDetailsDto>>> UpdateCartDetails(UpdateCartDetailsDto request);
     }
 }

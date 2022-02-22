@@ -14,18 +14,21 @@ namespace dotnet_5_Web_Api_Portfolio_Project
     {
         public AutoMapperProfile()
         {
+            // user maps
+
              CreateMap<User, GetUserDto>();
              CreateMap<GetUserDto, User>();
              CreateMap<UserRegisterDto, User>();
              CreateMap<UserLoginDto, User>();
              CreateMap<User, UserRegisterDto>();
              CreateMap<User, UserCartDto>();
-             CreateMap<User, UserCartDto>();
 
              //cart maps
 
              CreateMap<CreateNewCartDto, Cart>();
              CreateMap<Cart, NewlyCreatedCartDto>();
+             CreateMap<Cart, GetCartDetailsDto>();
+             CreateMap<UpdateCartDetailsDto, Cart>();
              
         }
     }

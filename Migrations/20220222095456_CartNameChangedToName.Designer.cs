@@ -3,36 +3,23 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dotnet_5_Web_Api_Portfolio_Project.Data;
 
 namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220222095456_CartNameChangedToName")]
+    partial class CartNameChangedToName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.2");
-
-            modelBuilder.Entity("CartItem", b =>
-                {
-                    b.Property<int>("CartsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ItemListId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CartsId", "ItemListId");
-
-                    b.HasIndex("ItemListId");
-
-                    b.ToTable("CartItem");
-                });
 
             modelBuilder.Entity("dotnet_5_Web_Api_Portfolio_Project.Models.Cart", b =>
                 {
@@ -64,8 +51,11 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<long>("AmountInWarhouse")
-                        .HasColumnType("bigint");
+                    b.Property<byte>("AmountInWarhouse")
+                        .HasColumnType("tinyint");
+
+                    b.Property<int?>("CartId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -77,6 +67,8 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                         .HasColumnType("tinyint");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CartId");
 
                     b.ToTable("Items");
                 });
@@ -123,21 +115,6 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("CartItem", b =>
-                {
-                    b.HasOne("dotnet_5_Web_Api_Portfolio_Project.Models.Cart", null)
-                        .WithMany()
-                        .HasForeignKey("CartsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("dotnet_5_Web_Api_Portfolio_Project.Models.Item", null)
-                        .WithMany()
-                        .HasForeignKey("ItemListId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("dotnet_5_Web_Api_Portfolio_Project.Models.Cart", b =>
                 {
                     b.HasOne("dotnet_5_Web_Api_Portfolio_Project.Models.User", "User")
@@ -145,6 +122,18 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("dotnet_5_Web_Api_Portfolio_Project.Models.Item", b =>
+                {
+                    b.HasOne("dotnet_5_Web_Api_Portfolio_Project.Models.Cart", null)
+                        .WithMany("ItemList")
+                        .HasForeignKey("CartId");
+                });
+
+            modelBuilder.Entity("dotnet_5_Web_Api_Portfolio_Project.Models.Cart", b =>
+                {
+                    b.Navigation("ItemList");
                 });
 #pragma warning restore 612, 618
         }

@@ -24,19 +24,20 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Controllers
         }
 
         [Authorize]
-        [HttpGet("Get all users cart items")]
-        public async Task<ActionResult<ServiceResponse<List<GetItemDto>>>> GetAllItems()
+        [HttpGet("Get all users cart items{id}")]
+        public async Task<ActionResult<ServiceResponse<List<GetItemDto>>>> GetAllItems(int id)
         {
-                return Ok(await _cartService.GetAllItems());          
+                return Ok(await _cartService.GetAllItems(id));          
         }
+        [Authorize]
         [HttpPost("delete item")]
-        public async Task<ActionResult<ServiceResponse<List<GetItemDto>>>> DeleteItemFromCart()
+        public async Task<ActionResult<ServiceResponse<List<GetItemDto>>>> DeleteItemFromCart(int itemId, long quantity)
         {
             return Ok();
         }
-
+        [Authorize]
         [HttpPost("Add item to cart")]
-        public async Task<ActionResult<ServiceResponse<List<GetItemDto>>>> AddItemToCart()
+        public async Task<ActionResult<ServiceResponse<List<GetItemDto>>>> AddItemToCart(int itemId, long quantity)
         {
             return Ok();
         }
@@ -47,6 +48,26 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Controllers
             return Ok(await _cartService.CreateNewCart(cart));
         }
 
+        [Authorize]
+        [HttpDelete("DeleteCart{id}")]
+        public async Task<ActionResult<ServiceResponse<List<GetCartDetailsDto>>>> DeleteCart(int id)
+        {
+            return Ok(await _cartService.DeleteCart(id));    
+        }
+
+        [Authorize]
+        [HttpGet("GetCartDetails{id}")]
+        public async Task<ActionResult<List<GetCartDetailsDto>>> GetCartDetails(int id)
+        {
+            return Ok(await _cartService.GetCartDetails(id));
+        }
+
+        [Authorize]
+        [HttpPost("UpdateCartDetails{id}")]
+        public async Task<ActionResult<List<GetCartDetailsDto>>> UpdateCartDetails(UpdateCartDetailsDto request)
+        {
+            return Ok(await _cartService.UpdateCartDetails(request));
+        }
         
 
     }
