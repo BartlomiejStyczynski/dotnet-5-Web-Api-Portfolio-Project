@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace dotnet_5_Web_Api_Portfolio_Project.Dtos.ItemDtos
+namespace dotnet_5_Web_Api_Portfolio_Project.Models
 {
-    public class GetItemDto
+    public class Product
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Description { get; set; }
-        public int Ratting { get; set; }
         public int Price { get; set; }
+        public string Description { get; set; }
+        public byte Ratting { get; set; }
+        public int AmountInWarehouse { get; set; }
+
     }
 }

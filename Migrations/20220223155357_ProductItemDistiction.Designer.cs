@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using dotnet_5_Web_Api_Portfolio_Project.Data;
 
 namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220223155357_ProductItemDistiction")]
+    partial class ProductItemDistiction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,9 +69,6 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Price")
-                        .HasColumnType("int");
-
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
@@ -97,9 +96,6 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Price")
-                        .HasColumnType("int");
-
                     b.Property<byte>("Ratting")
                         .HasColumnType("tinyint");
 
@@ -114,7 +110,6 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                             AmountInWarehouse = 100,
                             Description = "A car",
                             Name = "Car",
-                            Price = 0,
                             Ratting = (byte)6
                         },
                         new
@@ -123,7 +118,6 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                             AmountInWarehouse = 56,
                             Description = "A carrot",
                             Name = "Carrot",
-                            Price = 0,
                             Ratting = (byte)3
                         },
                         new
@@ -132,7 +126,6 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                             AmountInWarehouse = 47,
                             Description = "A plant",
                             Name = "Plant",
-                            Price = 0,
                             Ratting = (byte)6
                         },
                         new
@@ -141,7 +134,6 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                             AmountInWarehouse = 5,
                             Description = "Boots",
                             Name = "Boots",
-                            Price = 0,
                             Ratting = (byte)6
                         },
                         new
@@ -150,7 +142,6 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                             AmountInWarehouse = 13,
                             Description = "A shovel",
                             Name = "Shovel",
-                            Price = 0,
                             Ratting = (byte)6
                         },
                         new
@@ -159,7 +150,6 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                             AmountInWarehouse = 17,
                             Description = "A chainsaw",
                             Name = "Chainsaw",
-                            Price = 0,
                             Ratting = (byte)6
                         },
                         new
@@ -168,7 +158,6 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                             AmountInWarehouse = 26,
                             Description = "A black bag",
                             Name = "Black bag",
-                            Price = 0,
                             Ratting = (byte)6
                         },
                         new
@@ -177,7 +166,6 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                             AmountInWarehouse = 59,
                             Description = "A bleach",
                             Name = "Bleach",
-                            Price = 0,
                             Ratting = (byte)6
                         },
                         new
@@ -186,7 +174,6 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                             AmountInWarehouse = 1234,
                             Description = "A poster",
                             Name = "Poster",
-                            Price = 0,
                             Ratting = (byte)6
                         });
                 });

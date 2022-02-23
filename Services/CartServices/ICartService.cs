@@ -12,7 +12,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Services.CartServices
     {
         Task<ServiceResponse<List<GetItemDto>>> GetAllItems(int id);
         Task<ServiceResponse<List<GetItemDto>>> DeleteItemFromCart(int itemId, long quantity);
-        Task<ServiceResponse<List<GetItemDto>>> AddItemToCart(int itemId, long quantity);
+        Task<ServiceResponse<GetCartDetailsDto>> AddItemToCart(AddCartItemDto request);
 
         Task<ServiceResponse<NewlyCreatedCartDto>> CreateNewCart(CreateNewCartDto newCart);
 

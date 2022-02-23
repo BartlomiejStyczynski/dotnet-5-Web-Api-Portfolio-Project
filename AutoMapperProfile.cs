@@ -30,6 +30,10 @@ namespace dotnet_5_Web_Api_Portfolio_Project
              CreateMap<Cart, GetCartDetailsDto>();
              CreateMap<UpdateCartDetailsDto, Cart>();
              
+             // product maps
+
+            CreateMap<Product, Item>();
+
         }
     }
 }

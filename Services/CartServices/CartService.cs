@@ -29,9 +29,42 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Services.CartServices
         }
 
         private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
-        public Task<ServiceResponse<List<GetItemDto>>> AddItemToCart(int itemId, long quantity)
+        public async Task<ServiceResponse<GetCartDetailsDto>> AddItemToCart(AddCartItemDto request)
         {
-            throw new NotImplementedException();
+           var serviceResponse = new ServiceResponse<GetCartDetailsDto>();
+           try
+           {
+               var productInDb = await _context.Products.FirstOrDefaultAsync(i => i.Id == request.ItemId);
+               var cartInDb = await _context.Carts.Include(c => c.ItemList).FirstOrDefaultAsync(i => i.Id == request.CartId && i.User.Id == GetUserId());
+
+                if(productInDb != null && cartInDb != null)
+                {
+                    if(request.Quantity > productInDb.AmountInWarehouse)
+                    {
+                        serviceResponse.Success = false;
+                        serviceResponse.Message = $"Only {productInDb.AmountInWarehouse} pieces is avaible";
+                    }
+
+                    else
+                    {
+                        var item = _mapper.Map<Item>(productInDb);
+                        item.Quantity = request.Quantity;
+
+                        cartInDb.ItemList.Add(item);
+                        await _context.SaveChangesAsync();
+
+                        serviceResponse.Data = _mapper.Map<GetCartDetailsDto>(await _context.Carts.FirstOrDefaultAsync(c => c.Id == request.CartId));
+                    }
+
+                }
+           }
+           catch (System.Exception e)
+           {
+               serviceResponse.Success = false;
+               serviceResponse.Message = e.Message;
+           }
+
+           return serviceResponse;
         }
 
         public Task<ServiceResponse<List<GetItemDto>>> DeleteItemFromCart(int itemId, long quantity)

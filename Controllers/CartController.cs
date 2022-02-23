@@ -37,9 +37,9 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Controllers
         }
         [Authorize]
         [HttpPost("Add item to cart")]
-        public async Task<ActionResult<ServiceResponse<List<GetItemDto>>>> AddItemToCart(int itemId, long quantity)
+        public async Task<ActionResult<ServiceResponse<List<GetItemDto>>>> AddItemToCart(AddCartItemDto request)
         {
-            return Ok();
+            return Ok(await _cartService.AddItemToCart(request));
         }
         [Authorize]
         [HttpPost("CreateNewCart")]
