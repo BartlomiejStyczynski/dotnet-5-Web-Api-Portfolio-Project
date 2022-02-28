@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using dotnet_5_Web_Api_Portfolio_Project.Dtos;
 using dotnet_5_Web_Api_Portfolio_Project.Dtos.CartDtos;
+using dotnet_5_Web_Api_Portfolio_Project.Dtos.ItemDtos;
 using dotnet_5_Web_Api_Portfolio_Project.Dtos.UserDtos;
 using dotnet_5_Web_Api_Portfolio_Project.Models;
 
@@ -33,6 +34,10 @@ namespace dotnet_5_Web_Api_Portfolio_Project
              // product maps
 
             CreateMap<Product, Item>();
+
+            // item MapControllers
+
+            CreateMap<Item, GetItemDto>();
 
         }
     }

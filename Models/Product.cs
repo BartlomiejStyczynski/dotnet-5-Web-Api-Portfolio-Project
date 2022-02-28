@@ -9,7 +9,8 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int Price { get; set; }
+        public float Price { get; set; }
+        public string Barcode { get; set; }
         public string Description { get; set; }
         public byte Ratting { get; set; }
         public int AmountInWarehouse { get; set; }

@@ -10,8 +10,8 @@ using dotnet_5_Web_Api_Portfolio_Project.Data;
 namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220223155357_ProductItemDistiction")]
-    partial class ProductItemDistiction
+    [Migration("20220228124649_Barcodeandfloatprice")]
+    partial class Barcodeandfloatprice
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,12 +26,12 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                     b.Property<int>("CartsId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ItemListId")
+                    b.Property<int>("ItemsId")
                         .HasColumnType("int");
 
-                    b.HasKey("CartsId", "ItemListId");
+                    b.HasKey("CartsId", "ItemsId");
 
-                    b.HasIndex("ItemListId");
+                    b.HasIndex("ItemsId");
 
                     b.ToTable("CartItem");
                 });
@@ -66,8 +66,14 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
+                    b.Property<string>("Barcode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("Price")
+                        .HasColumnType("real");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -90,11 +96,17 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                     b.Property<int>("AmountInWarehouse")
                         .HasColumnType("int");
 
+                    b.Property<string>("Barcode")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("Price")
+                        .HasColumnType("real");
 
                     b.Property<byte>("Ratting")
                         .HasColumnType("tinyint");
@@ -108,72 +120,90 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                         {
                             Id = 1,
                             AmountInWarehouse = 100,
+                            Barcode = "1",
                             Description = "A car",
                             Name = "Car",
+                            Price = 10000f,
                             Ratting = (byte)6
                         },
                         new
                         {
                             Id = 2,
                             AmountInWarehouse = 56,
+                            Barcode = "2",
                             Description = "A carrot",
                             Name = "Carrot",
+                            Price = 1f,
                             Ratting = (byte)3
                         },
                         new
                         {
                             Id = 3,
                             AmountInWarehouse = 47,
+                            Barcode = "3",
                             Description = "A plant",
                             Name = "Plant",
+                            Price = 1f,
                             Ratting = (byte)6
                         },
                         new
                         {
                             Id = 4,
                             AmountInWarehouse = 5,
+                            Barcode = "4",
                             Description = "Boots",
                             Name = "Boots",
+                            Price = 60f,
                             Ratting = (byte)6
                         },
                         new
                         {
                             Id = 5,
                             AmountInWarehouse = 13,
+                            Barcode = "5",
                             Description = "A shovel",
                             Name = "Shovel",
+                            Price = 15f,
                             Ratting = (byte)6
                         },
                         new
                         {
                             Id = 6,
                             AmountInWarehouse = 17,
+                            Barcode = "6",
                             Description = "A chainsaw",
                             Name = "Chainsaw",
+                            Price = 300f,
                             Ratting = (byte)6
                         },
                         new
                         {
                             Id = 7,
                             AmountInWarehouse = 26,
+                            Barcode = "7",
                             Description = "A black bag",
                             Name = "Black bag",
+                            Price = 3.6f,
                             Ratting = (byte)6
                         },
                         new
                         {
                             Id = 8,
                             AmountInWarehouse = 59,
+                            Barcode = "8",
                             Description = "A bleach",
                             Name = "Bleach",
+                            Price = 2.8f,
                             Ratting = (byte)6
                         },
                         new
                         {
                             Id = 9,
                             AmountInWarehouse = 1234,
+                            Barcode = "9",
                             Description = "A poster",
                             Name = "Poster",
+                            Price = 27f,
                             Ratting = (byte)6
                         });
                 });
@@ -230,7 +260,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
 
                     b.HasOne("dotnet_5_Web_Api_Portfolio_Project.Models.Item", null)
                         .WithMany()
-                        .HasForeignKey("ItemListId")
+                        .HasForeignKey("ItemsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

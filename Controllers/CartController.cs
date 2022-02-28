@@ -27,7 +27,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Controllers
         [HttpGet("Get all users cart items{id}")]
         public async Task<ActionResult<ServiceResponse<List<GetItemDto>>>> GetAllItems(int id)
         {
-                return Ok(await _cartService.GetAllItems(id));          
+                return Ok(await _cartService.GetAllItemsInCart(id));          
         }
         [Authorize]
         [HttpPost("delete item")]

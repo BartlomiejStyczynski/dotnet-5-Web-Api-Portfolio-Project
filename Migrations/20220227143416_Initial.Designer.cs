@@ -10,8 +10,8 @@ using dotnet_5_Web_Api_Portfolio_Project.Data;
 namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220222102549_ManyToManyCartItems")]
-    partial class ManyToManyCartItems
+    [Migration("20220227143416_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,12 +26,12 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                     b.Property<int>("CartsId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ItemListId")
+                    b.Property<int>("ItemsId")
                         .HasColumnType("int");
 
-                    b.HasKey("CartsId", "ItemListId");
+                    b.HasKey("CartsId", "ItemsId");
 
-                    b.HasIndex("ItemListId");
+                    b.HasIndex("ItemsId");
 
                     b.ToTable("CartItem");
                 });
@@ -66,8 +66,32 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                         .HasColumnType("int")
                         .UseIdentityColumn();
 
-                    b.Property<long>("AmountInWarhouse")
-                        .HasColumnType("bigint");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Ratting")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("dotnet_5_Web_Api_Portfolio_Project.Models.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("AmountInWarehouse")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -75,12 +99,98 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
                     b.Property<byte>("Ratting")
                         .HasColumnType("tinyint");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Items");
+                    b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AmountInWarehouse = 100,
+                            Description = "A car",
+                            Name = "Car",
+                            Price = 0,
+                            Ratting = (byte)6
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AmountInWarehouse = 56,
+                            Description = "A carrot",
+                            Name = "Carrot",
+                            Price = 0,
+                            Ratting = (byte)3
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AmountInWarehouse = 47,
+                            Description = "A plant",
+                            Name = "Plant",
+                            Price = 0,
+                            Ratting = (byte)6
+                        },
+                        new
+                        {
+                            Id = 4,
+                            AmountInWarehouse = 5,
+                            Description = "Boots",
+                            Name = "Boots",
+                            Price = 0,
+                            Ratting = (byte)6
+                        },
+                        new
+                        {
+                            Id = 5,
+                            AmountInWarehouse = 13,
+                            Description = "A shovel",
+                            Name = "Shovel",
+                            Price = 0,
+                            Ratting = (byte)6
+                        },
+                        new
+                        {
+                            Id = 6,
+                            AmountInWarehouse = 17,
+                            Description = "A chainsaw",
+                            Name = "Chainsaw",
+                            Price = 0,
+                            Ratting = (byte)6
+                        },
+                        new
+                        {
+                            Id = 7,
+                            AmountInWarehouse = 26,
+                            Description = "A black bag",
+                            Name = "Black bag",
+                            Price = 0,
+                            Ratting = (byte)6
+                        },
+                        new
+                        {
+                            Id = 8,
+                            AmountInWarehouse = 59,
+                            Description = "A bleach",
+                            Name = "Bleach",
+                            Price = 0,
+                            Ratting = (byte)6
+                        },
+                        new
+                        {
+                            Id = 9,
+                            AmountInWarehouse = 1234,
+                            Description = "A poster",
+                            Name = "Poster",
+                            Price = 0,
+                            Ratting = (byte)6
+                        });
                 });
 
             modelBuilder.Entity("dotnet_5_Web_Api_Portfolio_Project.Models.User", b =>
@@ -135,7 +245,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Migrations
 
                     b.HasOne("dotnet_5_Web_Api_Portfolio_Project.Models.Item", null)
                         .WithMany()
-                        .HasForeignKey("ItemListId")
+                        .HasForeignKey("ItemsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

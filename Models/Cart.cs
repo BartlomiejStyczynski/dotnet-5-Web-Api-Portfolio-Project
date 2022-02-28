@@ -8,11 +8,11 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Models
     public class Cart
     {
         public int Id {get ; set; }
-        public List<Item> ItemList { get; set; } = new List<Item>();
+        public string Name { get; set; }
+        public bool IsMainCart { get; set; } = false;
+        public List<Item> Items { get; set; }
         public User User { get; set; }
 
-        public string Name { get; set; } = "Main";
 
-        public bool IsMainCart { get; set; } = true;
     }
 }

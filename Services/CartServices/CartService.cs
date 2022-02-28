@@ -31,56 +31,100 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Services.CartServices
         private int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
         public async Task<ServiceResponse<GetCartDetailsDto>> AddItemToCart(AddCartItemDto request)
         {
-           var serviceResponse = new ServiceResponse<GetCartDetailsDto>();
-           try
-           {
-               var productInDb = await _context.Products.FirstOrDefaultAsync(i => i.Id == request.ItemId);
-               var cartInDb = await _context.Carts.Include(c => c.ItemList).FirstOrDefaultAsync(i => i.Id == request.CartId && i.User.Id == GetUserId());
+            var serviceResponse = new ServiceResponse<GetCartDetailsDto>();
+            try
+            {
+                var productInDb = await _context.Products.FirstOrDefaultAsync(i => i.Id == request.ItemId);
 
-                if(productInDb != null && cartInDb != null)
+                if (productInDb == null)
                 {
-                    if(request.Quantity > productInDb.AmountInWarehouse)
-                    {
-                        serviceResponse.Success = false;
-                        serviceResponse.Message = $"Only {productInDb.AmountInWarehouse} pieces is avaible";
-                    }
-
-                    else
-                    {
-                        var item = _mapper.Map<Item>(productInDb);
-                        item.Quantity = request.Quantity;
-
-                        cartInDb.ItemList.Add(item);
-                        await _context.SaveChangesAsync();
-
-                        serviceResponse.Data = _mapper.Map<GetCartDetailsDto>(await _context.Carts.FirstOrDefaultAsync(c => c.Id == request.CartId));
-                    }
-
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "Product not found.";
+                    return serviceResponse;
                 }
-           }
-           catch (System.Exception e)
-           {
-               serviceResponse.Success = false;
-               serviceResponse.Message = e.Message;
-           }
 
-           return serviceResponse;
+                if (productInDb.AmountInWarehouse < request.Quantity)
+                {
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "Not enougt product in stock.";
+                    return serviceResponse;
+                }
+
+                var cartInDb = await _context.Carts.Include(c => c.Items)
+                                                 .FirstOrDefaultAsync(i => i.Id == request.CartId && i.User.Id == GetUserId());
+
+                if (cartInDb == null)
+                {
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "Cart not found.";
+                    return serviceResponse;
+                }
+
+                var itemInCart = cartInDb.Items.FirstOrDefault(i => i.Name.ToLower() == productInDb.Name.ToLower());
+                
+                if (itemInCart == null)
+                {
+                    var item = new Item();
+                    item.Name = productInDb.Name;
+                    item.Price = productInDb.Price;
+                    item.Ratting = productInDb.Ratting;
+                    item.Quantity = request.Quantity;
+
+                    _context.Items.Add(item);
+                    cartInDb.Items.Add(item);
+                    await _context.SaveChangesAsync();
+                }
+
+                else
+                {
+                   itemInCart.Quantity += request.Quantity;
+                   itemInCart.Ratting = productInDb.Ratting;
+                   await _context.SaveChangesAsync();
+                }
+
+                serviceResponse.Data = _mapper.Map<GetCartDetailsDto>(cartInDb);
+            }
+
+            catch (System.Exception e)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = e.Message;
+            }
+
+            return serviceResponse;
         }
 
-        public Task<ServiceResponse<List<GetItemDto>>> DeleteItemFromCart(int itemId, long quantity)
+        public async Task<ServiceResponse<GetCartDetailsDto>> RemoveItemFromCart(RemoveCartItemDto request)
         {
-            throw new NotImplementedException();
+            var serviceResponse = new ServiceResponse<GetCartDetailsDto>();
+
+            try
+            {
+                var cartInDb = await _context.Carts.FirstOrDefaultAsync(c => c.Id == request.CartId && c.User.Id == GetUserId());
+                if (cartInDb == null)
+                {
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "Cart not found.";
+                }
+            }
+            catch (System.Exception e)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = e.Message;
+            }
+
+            return serviceResponse;
         }
 
-        public async Task<ServiceResponse<List<GetItemDto>>> GetAllItems(int id)
+        public async Task<ServiceResponse<List<GetItemDto>>> GetAllItemsInCart(int id)
         {
             var serviceResponse = new ServiceResponse<List<GetItemDto>>();
             try
             {
-                var cart = await _context.Carts.FirstOrDefaultAsync(c => c.User.Id == GetUserId());
+                var cart = await _context.Carts.Include(c => c.Items).FirstOrDefaultAsync(c => c.Id == id && c.User.Id == GetUserId());
 
 
-                serviceResponse.Data = cart.ItemList.Select(item => _mapper.Map<GetItemDto>(item)).ToList();
+                serviceResponse.Data = cart.Items.Select(item => _mapper.Map<GetItemDto>(item)).ToList();
             }
             catch (System.Exception e)
             {
@@ -98,7 +142,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Services.CartServices
             {
                 var cart = new Cart
                 {
-                    ItemList = new List<Item>(),
+                    Items = new List<Item>(),
                     Name = newCart.Name,
                     IsMainCart = false,
                     User = await _context.Users.FirstOrDefaultAsync(u => u.Id == GetUserId())
@@ -177,14 +221,14 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Services.CartServices
             try
             {
                 var cartInDb = await _context.Carts.FirstOrDefaultAsync(c => c.Id == request.Id && c.User.Id == GetUserId());
-                if(cartInDb != null)
+                if (cartInDb != null)
                 {
                     cartInDb.Name = request.Name;
                     await _context.SaveChangesAsync();
 
                     serviceResponse.Data = await _context.Carts.Where(c => c.User.Id == GetUserId())
                                                                 .Select(c => _mapper.Map<GetCartDetailsDto>(c))
-                                                                .ToListAsync();               
+                                                                .ToListAsync();
                 }
 
                 else
@@ -201,5 +245,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Services.CartServices
             return serviceResponse;
 
         }
+
+
     }
 }
