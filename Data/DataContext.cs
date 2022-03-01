@@ -1,4 +1,5 @@
 using dotnet_5_Web_Api_Portfolio_Project.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace dotnet_5_Web_Api_Portfolio_Project.Data
@@ -31,6 +32,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Data
                 new Product {Id = 8, Name = "Bleach", Price = 2.8f, Barcode = "8", Description = "A bleach", Ratting = 6, AmountInWarehouse = 59},
                 new Product {Id = 9, Name = "Poster", Price = 27, Barcode = "9", Description = "A poster", Ratting = 6, AmountInWarehouse = 1234}
             );
+
         }
     }
 }

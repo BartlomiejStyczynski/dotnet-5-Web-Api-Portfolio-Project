@@ -34,7 +34,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Services.CartServices
             var serviceResponse = new ServiceResponse<GetCartDetailsDto>();
             try
             {
-                var productInDb = await _context.Products.FirstOrDefaultAsync(i => i.Id == request.ItemId);
+                var productInDb = await _context.Products.FirstOrDefaultAsync(i => i.Id == request.ProductId);
 
                 if (productInDb == null)
                 {
@@ -46,7 +46,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Services.CartServices
                 if (productInDb.AmountInWarehouse < request.Quantity)
                 {
                     serviceResponse.Success = false;
-                    serviceResponse.Message = "Not enougt product in stock.";
+                    serviceResponse.Message = "Not enough product in stock.";
                     return serviceResponse;
                 }
 
@@ -60,14 +60,11 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Services.CartServices
                     return serviceResponse;
                 }
 
-                var itemInCart = cartInDb.Items.FirstOrDefault(i => i.Name.ToLower() == productInDb.Name.ToLower());
-                
+                var itemInCart = cartInDb.Items.FirstOrDefault(i => i.Barcode == productInDb.Barcode);
+
                 if (itemInCart == null)
                 {
-                    var item = new Item();
-                    item.Name = productInDb.Name;
-                    item.Price = productInDb.Price;
-                    item.Ratting = productInDb.Ratting;
+                    var item = _mapper.Map<Item>(productInDb);
                     item.Quantity = request.Quantity;
 
                     _context.Items.Add(item);
@@ -77,9 +74,9 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Services.CartServices
 
                 else
                 {
-                   itemInCart.Quantity += request.Quantity;
-                   itemInCart.Ratting = productInDb.Ratting;
-                   await _context.SaveChangesAsync();
+                    itemInCart.Quantity += request.Quantity;
+                    itemInCart.Ratting = productInDb.Ratting;
+                    await _context.SaveChangesAsync();
                 }
 
                 serviceResponse.Data = _mapper.Map<GetCartDetailsDto>(cartInDb);
@@ -100,12 +97,35 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Services.CartServices
 
             try
             {
-                var cartInDb = await _context.Carts.FirstOrDefaultAsync(c => c.Id == request.CartId && c.User.Id == GetUserId());
+                var cartInDb = await _context.Carts.Include(c => c.User)
+                                                    .Include(c => c.Items)
+                                                    .FirstOrDefaultAsync(c => c.Id == request.CartId && c.User.Id == GetUserId());
                 if (cartInDb == null)
                 {
                     serviceResponse.Success = false;
                     serviceResponse.Message = "Cart not found.";
                 }
+
+                var itemInCart = cartInDb.Items.FirstOrDefault(i => i.Barcode == request.ItemBarcode);
+                if(itemInCart == null)
+                {
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "Item in cart not found.";
+                }
+
+                if(request.Quantity >= itemInCart.Quantity)
+                {
+                    cartInDb.Items.Remove(itemInCart);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    itemInCart.Quantity -= request.Quantity;
+                    await _context.SaveChangesAsync();
+                    serviceResponse.Data = _mapper.Map<GetCartDetailsDto>(cartInDb);
+                }
+                
+                return serviceResponse;
             }
             catch (System.Exception e)
             {
@@ -174,7 +194,14 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Services.CartServices
             {
                 var cartInDb = await _context.Carts.Include(u => u.User)
                                                 .FirstOrDefaultAsync(c => c.Id == id && c.User.Id == GetUserId());
-                if (cartInDb != null)
+                if (cartInDb == null)
+                {
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = $"Couldn't find cart(id == {id}) or unauthrized user";
+
+
+                }
+                else
                 {
                     _context.Carts.Remove(cartInDb);
                     await _context.SaveChangesAsync();
@@ -182,11 +209,6 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Services.CartServices
                     serviceResponse.Data = _context.Carts
                         .Where(c => c.User.Id == GetUserId())
                         .Select(c => _mapper.Map<GetCartDetailsDto>(c)).ToList();
-                }
-                else
-                {
-                    serviceResponse.Message = $"Couldn't find cart(id == {id}) or unauthrized user";
-                    serviceResponse.Success = false;
                 }
             }
             catch (System.Exception e)
@@ -203,7 +225,9 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Services.CartServices
             var serviceResponse = new ServiceResponse<GetCartDetailsDto>();
             try
             {
-                var cartInDb = await _context.Carts.Include(c => c.User).FirstOrDefaultAsync(c => c.Id == id && c.User.Id == GetUserId());
+                var cartInDb = await _context.Carts.Include(c => c.User)
+                                                    .Include(c => c.Items)
+                                                    .FirstOrDefaultAsync(c => c.Id == id && c.User.Id == GetUserId());
                 serviceResponse.Data = _mapper.Map<GetCartDetailsDto>(cartInDb);
             }
             catch (System.Exception e)

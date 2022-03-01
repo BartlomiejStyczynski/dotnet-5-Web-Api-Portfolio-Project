@@ -30,10 +30,10 @@ namespace dotnet_5_Web_Api_Portfolio_Project.Controllers
                 return Ok(await _cartService.GetAllItemsInCart(id));          
         }
         [Authorize]
-        [HttpPost("delete item")]
-        public async Task<ActionResult<ServiceResponse<List<GetItemDto>>>> DeleteItemFromCart(int itemId, long quantity)
+        [HttpPost("remove item from cart")]
+        public async Task<ActionResult<ServiceResponse<List<GetItemDto>>>> RemoveItemFromCart(RemoveCartItemDto request)
         {
-            return Ok();
+            return Ok(await _cartService.RemoveItemFromCart(request));
         }
         [Authorize]
         [HttpPost("Add item to cart")]

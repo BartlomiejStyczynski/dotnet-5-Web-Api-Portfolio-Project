@@ -21,7 +21,6 @@ namespace Data
             _context = context;
 
         }
-
         public async Task<ServiceResponse<string>> Login(string username, string password)
         {
             var response = new ServiceResponse<string>();

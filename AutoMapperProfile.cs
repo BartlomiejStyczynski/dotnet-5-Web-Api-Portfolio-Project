@@ -33,7 +33,7 @@ namespace dotnet_5_Web_Api_Portfolio_Project
              
              // product maps
 
-            CreateMap<Product, Item>();
+            CreateMap<Product, Item>().ForMember(rec => rec.Id, opt => opt.Ignore());
 
             // item MapControllers
 
